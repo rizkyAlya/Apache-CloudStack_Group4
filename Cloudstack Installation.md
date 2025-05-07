@@ -1,27 +1,29 @@
-## Computing Environment Setup
+# Setup Lingkungan Komputasi
 
-### Hardware Specification
+## Spesifikasi Perangkat Keras
 
 ```
 CPU : Intel Core i5 gen 8
 RAM : 24 GB
-Storage : 200GB
+Penyimpanan : 200GB
 Network : Ethernet 10GB/s
-Operating System : Ubuntu Server 24.04
+Sistem Operasi : Ubuntu Server 24.04
 ```
 
-### Network Address
+## Alamat Jaringan
 
 ```
-Network Address : 192.168.1.0/24
-Host IP address : 192.168.1.13/24
+Alamat jaringan : 192.168.1.0/24
+Alamat IP Host : 192.168.1.13/24
 Gateway : 192.168.1.1
-Public IP : 139.192.5.123
+IP public : 139.192.5.123
 ```
 
-## Configure Network 
 
-### Edit the network configuration file under /netplan directory
+## Konfigurasi Jaringan 
+
+### Modifikasi Berkas Konfigurasi Jaringan di Direktori /netplan
+Masuk sebagai root dan buka direktori konfigurasi jaringan dengan perintah berikut:
 
 ```
 sudo -i 
@@ -29,21 +31,21 @@ cd /etc/netplan
 nano ./*.yaml
 ```
 
-Edit the file
+Kemudian, modifikasi isi berkas konfigurasi menjadi seperti berikut:
 
 ```
-# This is the network config written by 'subiquity'
+# Ditulis oleh 'subiquity'
 network:
   version: 2
   renderer: networkd
   ethernets:
-    enp1s0: #Your ethernet adapter
+    enp1s0: # Adapter ethernet
       dhcp4: false
       dhcp6: false
       optional: true
   bridges:
     cloudbr0:
-      addresses: [192.168.1.13/24]  #Your host IP address
+      addresses: [192.168.1.13/24]  # Alamat IP host
       routes:
         - to: default
           via: 192.168.1.1
@@ -57,51 +59,50 @@ network:
         forward-delay: 0
 ```
 
-### Apply Network Configuration
+### Terapkan Konfigurasi Jaringan
 
 ```
-netplan generate        #generate config file for the renderer
-netplan apply           #applies network configuration to the system
-reboot
+netplan generate        # Menghasilkan berkas konfigurasi untuk renderer
+netplan apply           # Menerapkan konfigurasi jaringan ke sistem
+reboot                  # Memulai ulang sistem
 ```
 
-> Note : You may encounter some error during this step, make sure you use "space" instead of "tab" when modifying network configuration file
-> Note : To check whether your network configuration already applied or not, use ifconfig command and look for interface "br0", make sure the address is equal with the one you configured before
+> Catatan: Jika muncul error, pastikan bahwa menggunakan spasi, bukan tab saat memodifikasi berkas konfigurasi jaringan.
+> Catatan: Untuk melihat apakah konfigurasi jaringan sudah aktif, dapat menggunakan perintah ifconfig dan memeriksa antarmuka br0. Alamat IP yang terlihat harus sama dengan yang dikonfigurasi sebelumnya.
 
-
-
-### Test the Network, make sure the configuration applied
+### Uji jaringan
 
 ```
-ip address        #check the ip address and existing interface
-ping google.com   #make sure you could connect to the internet
+ip address        # Memeriksa alamat IP dan antarmuka yang tersedia
+ping google.com   # Memastikan bahwa perangkat dapat terhubung ke internet
 ```
 
-> Note : if you can't ping the google.com, try to ping your gateway and 8.8.8.8
-> This step will tell you the connection problem between your computer and internet, make sure there's no problem with the internet as you will install some package from internet
+> Catatan: Jika tidak dapat ping ke google.com, maka dapat mencoba ping ke gateway dan 8.8.8.8
+> Catatan: Tahapan ini membantu dalam proses identifikasi masalah koneksi antara komputer dan internet. Internet harus berjalan dengan lancar untuk mengunduh beberapa paket di tahapan selanjutnya.
 
-### Login to the system as root user
+### Login ke Sistem sebagai Pengguna Root
 
 ```
 sudo -i
 passwd root
-#change it to Pa$$w0rd
 ```
 
-### Enable SSH root login
+> Catatan: Setelah menjalankan perintah di atas, sistem akan meminta untuk memasukkan password root baru.
+
+### Aktifkan Login Root Melalui SSH
 
 ```
 sed -i '/#PermitRootLogin prohibit-password/a PermitRootLogin yes' /etc/ssh/sshd_config
-#restart ssh service
+# Restart layanan SSH
 service ssh restart
-#or
+# atau
 systemctl restart sshd.service
 ```
 
-## Cloudstack Installation (Controller and Compute Node at the Same Host)
 
+## Instalasi CloudStack (Controller dan Compute Node dalam Satu Host)
 
-### Importing cloudstack repositories key
+### Impor Kunci Repositori CloudStack
 
 ```
 mkdir -p /etc/apt/keyrings 
@@ -109,29 +110,28 @@ wget -O- http://packages.shapeblue.com/release.asc | gpg --dearmor | sudo tee /e
 echo deb [signed-by=/etc/apt/keyrings/cloudstack.gpg] http://packages.shapeblue.com/cloudstack/upstream/debian/4.20 / > /etc/apt/sources.list.d/cloudstack.list
 ```
 
-* The first line is to create a directory to store cloudstack public key
-* wget -O to download the given URL and redirect the output to 'gpg --dearmor' command
-* 'gpg --dearmor' command will convert from ASCII armored to binary format
-* 'sudo tee' command will redirect 'gpg --dearmor' command to file /etc/apt/keyrings/cloudstack.gpg
+> Penjelasan:
+* Baris pertama digunakan untuk membuat direktori baru tempat menyimpan kunci publik CloudStack.
+* `wget -O-` digunakan untuk mengunduh URL yang diberikan dan mengalirkan output ke perintah `gpg --dearmor`.
+* Perintah `gpg --dearmor` digunakan untuk mengubah format ASCII ke format biner.
+* Perintah `sudo tee` mengalihkan hasil dari `gpg --dearmor` ke berkas `/etc/apt/keyrings/cloudstack.gpg`.
 
-### Installing Cloudstack and Mysql Server
+### Install CloudStack dan MySQL Server
 
 ```
 apt update -y
 apt install cloudstack-management mysql-server
 ```
 
-> Note : This process will take a long time
+### Konfigurasi MySQL
 
-### Configure mysql
-
-#### Open mysql config file
+#### Buka berkas konfigurasi MySQL
 
 ```
 nano /etc/mysql/mysql.conf.d/mysqld.cnf
 ```
 
-#### Copy these lines under [mysqld] section
+#### Tambahkan baris berikut di bahwa bagian [mysqld]
 
 ```
 server-id = 1
@@ -143,18 +143,18 @@ log-bin=mysql-bin
 binlog-format = 'ROW'
 ```
 
-#### Restart mysql service
+#### Restart layanan MySQL
 ```
 systemctl restart mysql
 ```
 
-### Deploy Database as Root and Then Create "cloud" User with Password "cloud" too
+### Deploy Database sebagai Root dan Buat Pengguna "cloud" dengan Kata Sandi "cloud
 
 ```
 cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root:Pa$$w0rd -i 192.168.1.13
 ```
 
-### Configure Primary and Secondary Storage
+### Konfigurasi Penyimpanan Primer dan Sekunder
 
 ```
 apt install nfs-kernel-server quota
@@ -163,7 +163,12 @@ mkdir -p /export/primary /export/secondary
 exportfs -a
 ```
 
-### Configure NFS Server
+> Catatan:
+* Penyimpanan primer digunakan untuk menyimpan disk virtual machine (VM) dan merupakan penyimpanan utama.
+* Penyimpanan sekunder digunakan untuk menyimpan template VM, ISO image, dan snapshot.
+
+### Konfigurasi Server NFS
+NFS digunakan sebagai shared storage untuk penyimpanan primer dan sekunder, supaya bisa diakses oleh banyak host secara bersamaan.
 
 ```
 sed -i -e 's/^RPCMOUNTDOPTS="--manage-gids"$/RPCMOUNTDOPTS="-p 892 --manage-gids"/g' /etc/default/nfs-kernel-server
@@ -172,22 +177,17 @@ echo "NEED_STATD=yes" >> /etc/default/nfs-common
 sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
-Explanation
 
-* `sed -i -e 's/^RPCMOUNTDOPTS="--manage-gids"$/RPCMOUNTDOPTS="-p 892 --manage-gids"/g' /etc/default/nfs-kernel-server`
-This command uses the sed (stream editor) command to search for the line RPCMOUNTDOPTS="--manage-gids" in the file /etc/default/nfs-kernel-server and replace it with RPCMOUNTDOPTS="-p 892 --manage-gids". The -i option tells sed to edit files in place (i.e., save the changes to the original file).
+>Penjelasan:
+* Baris pertama: Mengubah baris `RPCMOUNTDOPTS="--manage-gids"` pada berkas `/etc/default/nfs-kernel-server` menjadi `RPCMOUNTDOPTS="-p 892 --manage-gids"` menggunakan sed.
 
-* `sed -i -e 's/^STATDOPTS=$/STATDOPTS="--port 662 --outgoing-port 2020"/g' /etc/default/nfs-common`
-This command uses sed to search for the line STATDOPTS= in the file /etc/default/nfs-common and replace it with STATDOPTS="--port 662 --outgoing-port 2020".
+* Baris kedua: Mengubah baris `STATDOPTS=` pada berkas `/etc/default/nfs-common` menjadi `STATDOPTS="--port 662 --outgoing-port 2020"`.
 
-* `echo "NEED_STATD=yes" >> /etc/default/nfs-common`
-This command appends the line NEED_STATD=yes to the end of the file /etc/default/nfs-common. The >> operator in bash is used to append output to a file.
+* Baris ketiga: Menambahkan baris `NEED_STATD=yes` ke akhir berkas `/etc/default/nfs-common`.
 
-* `sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota`
-This command uses sed to search for the line RPCRQUOTADOPTS= in the file /etc/default/quota and replace it with RPCRQUOTADOPTS="-p 875".
+* Baris keempat: Mengubah baris `RPCRQUOTADOPTS=` pada berkas `/etc/default/quota` menjadi `RPCRQUOTADOPTS="-p 875"`.
 
-* `service nfs-kernel-server restart`
-This command will restart NFS Service
+* Baris kelima: Memulai ulang layanan NFS agar semua perubahan konfigurasi diterapkan
 
 ## Configure Cloudstack Host with KVM Hypervisor
 
