@@ -67,8 +67,9 @@ netplan apply           # Menerapkan konfigurasi jaringan ke sistem
 reboot                  # Memulai ulang sistem
 ```
 
-> Catatan: Jika muncul error, pastikan bahwa menggunakan spasi, bukan tab saat memodifikasi berkas konfigurasi jaringan.
-> Catatan: Untuk melihat apakah konfigurasi jaringan sudah aktif, dapat menggunakan perintah ifconfig dan memeriksa antarmuka br0. Alamat IP yang terlihat harus sama dengan yang dikonfigurasi sebelumnya.
+> Catatan: 
+* Jika muncul error, pastikan bahwa menggunakan spasi, bukan tab saat memodifikasi berkas konfigurasi jaringan.
+* Untuk melihat apakah konfigurasi jaringan sudah aktif, dapat menggunakan perintah ifconfig dan memeriksa antarmuka br0. Alamat IP yang terlihat harus sama dengan yang dikonfigurasi sebelumnya.
 
 ### Uji jaringan
 
@@ -77,8 +78,9 @@ ip address        # Memeriksa alamat IP dan antarmuka yang tersedia
 ping google.com   # Memastikan bahwa perangkat dapat terhubung ke internet
 ```
 
-> Catatan: Jika tidak dapat ping ke google.com, maka dapat mencoba ping ke gateway dan 8.8.8.8
-> Catatan: Tahapan ini membantu dalam proses identifikasi masalah koneksi antara komputer dan internet. Internet harus berjalan dengan lancar untuk mengunduh beberapa paket di tahapan selanjutnya.
+> Catatan:
+* Jika tidak dapat ping ke google.com, maka dapat mencoba ping ke gateway dan 8.8.8.8
+* Tahapan ini membantu dalam proses identifikasi masalah koneksi antara komputer dan internet. Internet harus berjalan dengan lancar untuk mengunduh beberapa paket di tahapan selanjutnya.
 
 ### Login ke Sistem sebagai Pengguna Root
 
@@ -163,7 +165,7 @@ mkdir -p /export/primary /export/secondary
 exportfs -a
 ```
 
-> Catatan:
+> Penjelasan:
 * Penyimpanan primer digunakan untuk menyimpan disk virtual machine (VM) dan merupakan penyimpanan utama.
 * Penyimpanan sekunder digunakan untuk menyimpan template VM, ISO image, dan snapshot.
 
@@ -178,7 +180,7 @@ sed -i -e 's/^RPCRQUOTADOPTS=$/RPCRQUOTADOPTS="-p 875"/g' /etc/default/quota
 service nfs-kernel-server restart
 ```
 
->Penjelasan:
+> Penjelasan:
 * Baris pertama: Mengubah baris `RPCMOUNTDOPTS="--manage-gids"` pada berkas `/etc/default/nfs-kernel-server` menjadi `RPCMOUNTDOPTS="-p 892 --manage-gids"` menggunakan sed.
 
 * Baris kedua: Mengubah baris `STATDOPTS=` pada berkas `/etc/default/nfs-common` menjadi `STATDOPTS="--port 662 --outgoing-port 2020"`.
@@ -189,34 +191,28 @@ service nfs-kernel-server restart
 
 * Baris kelima: Memulai ulang layanan NFS agar semua perubahan konfigurasi diterapkan
 
-## Configure Cloudstack Host with KVM Hypervisor
+## Konfigurasi Host CloudStack dengan Hypervisor KVM
 
-### Install KVM and Cloudstack Agent
+### Instalasi KVM dan Agen CloudStack
 
 ```
 apt install qemu-kvm cloudstack-agent -y
 ```
 
-### Configure KVM Virtualization Management
+### Konfigurasi Manajemen Virtualisasi KVM
 
-#### Change some lines
+#### Ubah beberapa baris konfigurasi
 
 ```
 sed -i -e 's/\#vnc_listen.*$/vnc_listen = "0.0.0.0"/g' /etc/libvirt/qemu.conf
 
-# On Ubuntu 22.04, add LIBVIRTD_ARGS="--listen" to /etc/default/libvirtd instead.
-
+# Untuk Ubuntu 22.04 dan setelahnya, tambahkan baris berikut ke /etc/default/libvirtd
 sed -i.bak 's/^\(LIBVIRTD_ARGS=\).*/\1"--listen"/' /etc/default/libvirtd
 ```
 
-Explanation
-
-* `sed -i -e 's/\#vnc_listen.*$/vnc_listen = "0.0.0.0"/g' /etc/libvirt/qemu.conf`
-This command uses the sed (stream editor) command to search for lines in the file /etc/libvirt/qemu.conf that start with #vnc_listen and replace them with vnc_listen = "0.0.0.0". The -i option tells sed to edit files in place (i.e., save the changes to the original file). The 0.0.0.0 address is a special IP address used in network programming to specify all IP addresses on the local machine.
-
-* `sed -i.bak 's/^\(LIBVIRTD_ARGS=\).*/\1"--listen"/' /etc/default/libvirtd`
-This command uses sed to search for lines in the file /etc/default/libvirtd that start with LIBVIRTD_ARGS= and replace them with LIBVIRTD_ARGS="--listen". The -i.bak option tells sed to edit files in place and make a backup of the original file with the .bak extension.
-
+> Penjelasan:
+* Baris pertama: Mengaktifkan VNC supaya dapat diakses dari semua alamat IP.
+* Baris kedua: Mengatur `libvirtd` supaya mendengarkan koneksi TCP dan menyimpan salinan cadangan dari konfigurasi sebelumnya.
 
 #### Add some lines
 
@@ -227,18 +223,8 @@ echo 'tcp_port = "16509"' >> /etc/libvirt/libvirtd.conf
 echo 'mdns_adv = 0' >> /etc/libvirt/libvirtd.conf
 echo 'auth_tcp = "none"' >> /etc/libvirt/libvirtd.conf
 ```
-Explanation
 
-* `echo 'listen_tls=0' >> /etc/libvirt/libvirtd.conf` disable TLS listening on libvirt daemon
-
-* `echo 'listen_tcp=1' >> /etc/libvirt/libvirtd.conf` enable TCP listening on libvirt daemon
-
-* `echo 'tcp_port = "16509"' >> /etc/libvirt/libvirtd.conf` specify a port where daemon will listen for a TCP connection
-
-* `echo 'mdns_adv = 0' >> /etc/libvirt/libvirtd.conf` disable multicast DNS, libvirtd service will not found through nDNS
-
-* `echo 'auth_tcp = "none"' >> /etc/libvirt/libvirtd.conf` disable authentication for TCP connection to libvirt daemon
-
+> Penjelasan: Untuk menonaktifkan TLS dan mdns, serta mengaktifkan akses TCP tanpa autentikasi melalui port 16509, supaya CloudStack dapat terhubung ke libvirt.
 
 #### Restart libvirtd
 
@@ -247,18 +233,11 @@ systemctl mask libvirtd.socket libvirtd-ro.socket libvirtd-admin.socket libvirtd
 systemctl restart libvirtd
 ```
 
-Command Explanation
+> Penjelasan:
+* Baris pertama: Digunakan untuk menonaktifkan lima socket default yang biasanya digunakan oleh daemon `libvirtd` untuk menerima koneksi lokal dan remote. Dengan menggunakan `mask`, maka libvirt hanya akan menerima koneksi dari konfigurasi yang ditentukan secara manual.
+* Baris kedua: Memulai ulang layanan libvirtd supaya dapat membaca file konfigurasi yang telah dimodifikasi.
 
-* `systemctl mask libvirtd.socket libvirtd-ro.socket libvirtd-admin.socket libvirtd-tls.socket libvirtd-tcp.socket`
- This command uses systemctl, the system and service manager for Linux, to mask several socket units related to the libvirtd service. Masking a unit in systemd effectively disables it and makes it impossible to start it manually or allow other services to start it. In this case, the command is masking several sockets that libvirtd uses to communicate with other processes. This might be done to prevent libvirtd from accepting connections over these sockets.
-
-* `systemctl restart libvirtd`
-This command uses systemctl to restart the libvirtd service. This is often necessary after making changes to a service’s configuration or its related units (like sockets), to ensure the changes take effect.
-
-libvirtd is a daemon that provides management of virtual machines (VMs), virtual networks, and storage for various virtualization technologies, such as KVM, QEMU, Xen, and others. It is part of the libvirt project, which offers a toolkit for managing virtualization platforms. The primary purpose of libvirtd is to provide a consistent and secure API for managing VMs and associated resources, regardless of the underlying virtualization technology.
-
-
-### Configuration to Support Docker and Other Services
+### Konfigurasi untuk Mendukung Docker dan Layanan Lain
 
 ```
 echo "net.bridge.bridge-nf-call-arptables = 0" >> /etc/sysctl.conf
@@ -266,10 +245,9 @@ echo "net.bridge.bridge-nf-call-iptables = 0" >> /etc/sysctl.conf
 sysctl -p
 ```
 
-> ARP and IP packet will not processed by arptable and iptable
+> Penjelasan: Menonaktifkan pemrosesan ARP dan IP oleh `arptables` dan `iptables` untuk menghindari konflik dengan Docker dan sistem jaringan bridge lainnya.
 
-
-### Generate Unique Host ID
+### Menghasilkan Host UUID Unik
 
 ```
 apt install uuid -y
@@ -278,7 +256,9 @@ echo host_uuid = \"$UUID\" >> /etc/libvirt/libvirtd.conf
 systemctl restart libvirtd
 ```
 
-### Configure Iptables Firewall and Make it persistent
+> Penjelasan: UUID unik digunakan agar setiap host KVM dapat diindentifikasi secara berbeda oleh CloudStack. Untuk instalasi multi-host.
+
+### Konfigurasi Firewall (iptables)
 
 ```
 NETWORK=192.168.1.0/24
@@ -297,22 +277,15 @@ iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 9090 -j ACCEPT
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j ACCEPT   # libvirt (KVM communication)
 
 apt install iptables-persistent
-#just answer yes yes
 ```
+> Penjelasan: Firewall ini memastikan semua port penting untuk CloudStack, NFS, dan KVM dapat diakses dari jaringan lokal.
+* `-A input`: Menambahkan aturan ke Input chain, yaitu jalur untuk paket data yang masuk ke sistem.
+* `-s $NETWORK`: Menentukan sumber paket. Variabel `$NETWORK` berisi alamat jaringan.
+* `-m state`: Menggunakan modul `state` untuk mencocokkan status koneksi. `NEW' berarti aturan hanya berlaku untuk koneksi yang baru dimulai.
+* `-p udp/tcp --dport [PORT NUMBER]`: Menetapkan protokol (TCP dan UDP) serta nomor port tujuan yang akan diizinkan.
+* `-j ACCEPT`: Menentukan tindakan terhadap paket yang cocok dengan aturan ini, yaitu mengizinkan paket untuk masuk. 
 
-This step ensuring all service port used by cloudstack didn't blocked by firewall and accessible by network
-
-Explanation
-
-* '-A input' will append the rule to INPUT rule chain
-* '-s $NETWORK' specifying the packet source, in this case the source is network 192.168.101.0/24
-* '-m state' using state module to match packet state, '--state NEW' means rules applied only for packet that start new connection
-* '-p udp/tcp --dport [PORT NUMBER]' apply rule for specific protocol and destination port number
-* '-j ACCEPT' accepting packet matched with the rule  
-
-
-
-### Install cloudstack agent
+### Instalasi CloudStack Agent
 
 ```
 systemctl unmask cloudstack-agent
@@ -320,7 +293,9 @@ apt update -y
 apt install cloudstack-agent -y
 ```
 
-### Disable apparmour on libvirtd
+> Penjelasan: Agen ini memungkinkan host KVM dikontrol oleh server manajemen CloudStack.
+
+### Nonaktifkan AppArmor untuk Libvirt
 
 ```
 ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/
@@ -329,48 +304,39 @@ apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd
 apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper
 ```
 
-Explanation
-
-
+> Penjelasan: Langkah ini menyelesaikan instalasi dan konfigurasi awal CloudStack serta memulai layanan manajemen.
 * `ln -s /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable/`
-This command creates a symbolic link (a type of file that points to another file or directory) from /etc/apparmor.d/usr.sbin.libvirtd to /etc/apparmor.d/disable/. This effectively disables the AppArmor profile for usr.sbin.libvirtd.
-
+Untuk membuat symlink (tautan simbolik) ke direktori `disable/` agar AppArmor tidak lagi memuat profil `usr.sbin.libvirtd`. Merupakan cara standar untuk menonaktifkan profil tertentu tanpa menghapus file aslinya.
 * `ln -s /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper /etc/apparmor.d/disable/`
-This command creates a symbolic link from /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper to /etc/apparmor.d/disable/, disabling the AppArmor profile for usr.lib.libvirt.virt-aa-helper.
-
+Sama seperti perintah sebelumnya, namun yang ini untuk profil `virt-aa-helper`, yaitu helper bawaan libvirt untuk pengelolaan kebijakan keamanan VM.
 * `apparmor_parser -R /etc/apparmor.d/usr.sbin.libvirtd`
-This command uses the apparmor_parser utility to remove the AppArmor profile for usr.sbin.libvirtd from the kernel. The -R option tells apparmor_parser to remove a profile.
-
+Untuk menghapus profil `usr.sbin.libvirtd` dari kernel secara langsung, sehingga perubahan dapat berlaku tanpa reboot.
 * `apparmor_parser -R /etc/apparmor.d/usr.lib.libvirt.virt-aa-helper`
-This command removes the AppArmor profile for usr.lib.libvirt.virt-aa-helper from the kernel.
+Untuk menghapus profil `virt-aa-helper` dari kernel agar tidak aktif saat layanan berjalan.
 
-
-
-### Launch management Server
+### Menjalankan CloudStack Management Server
 
 ```
 cloudstack-setup-management
 systemctl status cloudstack-management
 ```
 
-Explanation
-
+> Penjelasan: Langkah ini menyelesaiakan instalasi dan konfigurasi awal CloudStack, serta memulai layanan manajemen.
 * `cloudstack-setup-management`
-This command is used to set up the management server for Apache CloudStack, an open-source cloud computing software for creating, managing, and deploying infrastructure cloud services. It configures the database connection, sets up the management server’s IP address, and starts the management server.
-
+Untuk menginisialisasi dan mengonfigurasi server manajemen Apache CloudStack.
 * `systemctl status cloudstack-management`
-This command uses systemctl, the system and service manager for Linux, to display the status of the cloudstack-management service. It shows whether the service is running or not, and displays the most recent log entries. You can use this command to check if the CloudStack management server is running properly.
+Untuk menampilkan status terkini dari layanan CloudStack Management Server, dan juga menunjukkan log terbaru yang dapat membantu proses troubleshooting jika terjadi kegagalan.
 
-
-
-### Open web browser and type
+### Akses Antarmuka Web
 
 ```
 http://<YOUR_IP_ADDRESS>:8080
 ```
 
-Example:
+Contoh:
 
 ```
 http://139.192.5.123:8080
 ```
+
+> Penjelasan: Gunakan browser untuk membuka antarmuka web CloudStack dan lanjutkan ke konfigurasi melalui GUI.
