@@ -16,7 +16,7 @@ Sistem Operasi : Ubuntu Server 24.04
 Alamat jaringan : 192.168.1.0/24
 Alamat IP Host : 192.168.1.13/24
 Gateway : 192.168.1.1
-IP public : 139.192.5.123
+IP public : 149.113.225.52
 ```
 
 
