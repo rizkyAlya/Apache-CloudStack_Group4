@@ -13,10 +13,10 @@ Sistem Operasi : Ubuntu Server 24.04
 ## Alamat Jaringan
 
 ```
-Alamat jaringan : 192.168.1.0/24
-Alamat IP Host : 192.168.1.13/24
-Gateway : 192.168.1.1
-IP public : 149.113.225.52
+Alamat jaringan : 192.168.X.X/24
+Alamat IP Host : 192.168.X.X/24
+Gateway : 192.168.X.X
+IP public : 139.194.X.X
 ```
 
 
@@ -45,10 +45,10 @@ network:
       optional: true
   bridges:
     cloudbr0:
-      addresses: [192.168.1.13/24]  # Alamat IP host
+      addresses: [192.168.X.X/24]  # Alamat IP host
       routes:
         - to: default
-          via: 192.168.1.1
+          via: 192.168.X.X  # Gateway
       nameservers:
         addresses: [1.1.1.1,8.8.8.8]
       interfaces: [enp1s0]
@@ -150,10 +150,10 @@ binlog-format = 'ROW'
 systemctl restart mysql
 ```
 
-### Deploy Database sebagai Root dan Buat Pengguna "cloud" dengan Kata Sandi "cloud
+### Deploy Database sebagai Root dan Buat Pengguna
 
 ```
-cloudstack-setup-databases cloud:cloud@localhost --deploy-as=root:Pa$$w0rd -i 192.168.1.13
+cloudstack-setup-databases <db_user>:<db_password>@localhost --deploy-as=<root_user>:<root_password>
 ```
 
 ### Konfigurasi Penyimpanan Primer dan Sekunder
@@ -261,19 +261,19 @@ systemctl restart libvirtd
 ### Konfigurasi Firewall (iptables)
 
 ```
-NETWORK=192.168.1.0/24
+NETWORK=192.168.X.X/24
 iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 111 -j ACCEPT     # Portmap service (needed for NFS)
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 111 -j ACCEPT     # Portmap service (needed for NFS)
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 2049 -j ACCEPT    # NFS server port
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 32803 -j ACCEPT   # NFS mountd (dynamic port)
 iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 32769 -j ACCEPT   # NFS nlockmgr
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 892 -j ACCEPT     # NFS rpc.mountd
-iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 875 -j ACCEPT     # 	NFS rquotad (quota)
-iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 662 -j ACCEPT     # 	NFS statd
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 875 -j ACCEPT     # NFS rquotad (quota)
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 662 -j ACCEPT     # NFS statd
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8250 -j ACCEPT    # CloudStack Agent
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8080 -j ACCEPT    # CloudStack Management Server
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 8443 -j ACCEPT    # CloudStack Management Server
-iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 9090 -j ACCEPT    # 	CloudStack Console Proxy (VM console)	
+iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 9090 -j ACCEPT    # CloudStack Console Proxy (VM console)	
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 16514 -j ACCEPT   # libvirt (KVM communication)
 
 apt install iptables-persistent
@@ -330,13 +330,7 @@ Untuk menampilkan status terkini dari layanan CloudStack Management Server, dan 
 ### Akses Antarmuka Web
 
 ```
-http://<YOUR_IP_ADDRESS>:8080
-```
-
-Contoh:
-
-```
-http://139.192.5.123:8080
+http://<IP_Address>:8080
 ```
 
 > Penjelasan: Gunakan browser untuk membuka antarmuka web CloudStack dan lanjutkan ke konfigurasi melalui GUI.
