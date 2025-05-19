@@ -37,10 +37,23 @@ Merupakan fitur perangkat lunak pada Linux yang memungkinkan mesin fisik untuk m
 ### NFS (*Network File System*)
 Merupakan protokol jaringan yang digunakan untuk berbagi file secara terdistribusi, memungkinkan sistem penyimpanan seperti hard disk atau SSD diakses melalui jaringan. Dengan NFS, administrator sistem dapat membagikan seluruh atau sebagian *file system* ke server jaringan, sehingga dapat diakses oleh pengguna komputer jarak jauh yang memiliki otorisasi. Protokol NFS menggunakan *Remote Procedure Calls* (RPC) untuk mengatur komunikasi dan permintaan antara klien dan server, sehingga proses transfer data berjalan efisien.
 
-(KVM, libvirt, NFS, AppArmor, iptables, dll)
+### iptables
+Merupakan _firewall_ standar yang disertakan di sebagian besar distribusi Linux dan berfungsi sebagai antarmuka baris perintah untuk mengelola aturan _firewall_ di tingkat kernel melalui netfilter. Dalam konteks CloudStack, iptables berperan dalam mengamankan lalu lintas jaringan dengan memfilter paket data berdasarkan seperangkat aturan yang telah ditentukan. Aturan-aturan ini menentukan karakteristik paket yang harus sesuai, seperti jenis protokol, alamat sumber atau tujuan, _port_, serta antarmuka jaringan yang digunakan. Dengan ini, iptables memungkinkan administrator CloudStack untuk mengontrol lalu lintas jaringan masuk dan keluar, memastikan bahwa hanya koneksi yang sah yang diizinkan, sehingga memperkuat keamanan infrastruktur _cloud_.
 
 ## Arsitektur Sistem
-(Diagram sederhana mengenai bagaimana setiap komponen terhubung)
+<img src="https://github.com/user-attachments/assets/62652671-4837-4fec-a694-190a61a7f24a" alt="arsitektur" width="400"/>
+
+CloudStack membagi infrastruktur cloud ke dalam beberapa lapisan: `Zone → Pod → Cluster → Host & Primary Storage`
+* `Zone`: Mewakili satu lokasi fisik pusat data.
+* `Pod`: Grup server dalam satu subnet yang terhubung ke switch layer-2.
+* `Cluster`: Sekelompok host dan penyimpanan primer yang memiliki jenis hypervisor yang sama.
+* `Host`: Mesin fisik tempat VM berjalan.
+* `Primary Storage`: Digunakan untuk menyimpan disk image VM (_root_ dan _data disk_).
+
+Terpisah dari struktur Pod-Cluster, terdapat `Secondary Storage`, yang digunakan untuk menyimpan template VM, ISO, dan snapshot. Dapat digunakan bersama oleh semua pod dan zone, dengan konfigurasi menggunakan protokol seperti NFS. 
 
 ## Referensi
-
+* "What is Apache CloudStack?" Apache Cloudstack. [Online]. Available: https://docs.cloudstack.apache.org/en/4.11.1.0/conceptsandterminology/concepts.html. [Accessed: May 14, 2025].
+* "Apa Itu KVM (Mesin Virtual Berbasis Kernel)?" AWS. [Online]. Available: https://aws.amazon.com/id/what-is/kvm/. [Accessed: May 17, 2025].
+* P. Loshin, "Network File System (NFS)" TechTarget. [Online]. Available: https://www.techtarget.com/searchenterprisedesktop/definition/Network-File-System. [Accessed: May 17, 2025].
+* J. Ellingwood, "How the Iptables Firewall Works," Dec. 2022. [Online]. Available: https://www.digitalocean.com/community/tutorials/how-the-iptables-firewall-works. [Accessed: May 19, 2025].
