@@ -12,7 +12,7 @@ password: password
 > Catatan: Field `Domain` dapat dikosongkan
 
 Berikut adalah tampilan awal dari web CloudStack:  
-<img src="https://github.com/user-attachments/assets/37893420-a7cb-459b-a97d-b5b5a3be72d7" alt="dashboard" width="600" height="400"/>
+<img src="https://github.com/user-attachments/assets/37893420-a7cb-459b-a97d-b5b5a3be72d7" alt="dashboard" width="650" height="400"/>
 
 > Catatan: Setelah login, password dapat langsung diubah
 
@@ -148,9 +148,9 @@ Path: /export/secondary
 ```
 
 ### 6. Launch zone
-Pada tahap akhir ini, semua komponen yang telah dikonfigurasi akan dikonfirmasi dan diaktifkan agar zone dapat digunakan untuk menjalankan VM. Jika semua konfigurasi valid, maka zone sudah dapat aktif dan digunakan.  
+Pada tahap akhir ini, semua komponen yang telah dikonfigurasi akan dikonfirmasi dan diaktifkan agar zone dapat digunakan untuk menjalankan VM. Jika semua konfigurasi valid, maka zone sudah aktif dan dapat digunakan.  
 Tampilan jika konfigurasi berhasil:  
-<img src="https://github.com/user-attachments/assets/a1d081a6-f8be-483f-b973-f9b7ed9ad0a7" alt="dashboard" width="600" height="200"/>
+<img src="https://github.com/user-attachments/assets/a1d081a6-f8be-483f-b973-f9b7ed9ad0a7" alt="dashboard" width="800" height="350"/>
 
 
 ## Pembuatan Instance (VM)
@@ -161,62 +161,70 @@ Pada bagian ini akan dilakukan pendaftaran file ISO yang digunakan sebagai siste
 `Images` -> `ISO` -> `Register ISO`
 
 **Field yang wajib diisi:**
-* URL: Berisi link ke file .iso yang akan digunakan.
-* Name: Nama untuk ISO. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
-* Zone: Zone tempat ISO ini tersedia.
-* OS Type: Sistem operasi yang sesuai dengan ISO yang digunakan.
+* `URL`: Berisi link ke file .iso yang akan digunakan.
+* `Name`: Nama untuk ISO. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
+* `Zone`: Zone tempat ISO ini tersedia.
+* `OS Type`: Sistem operasi yang sesuai dengan ISO yang digunakan.
 
 ```
-URL:
-Name:
-Zone: All zones
-OS Type:
+URL: https://saimei.ftp.acc.umu.se/debian-cd/current/amd64/iso-cd/debian-12.10.0-amd64-netinst.iso
+Name: Debian
+Zone: NEW-ZONE
+OS Type: Debian GNU/Linux 12 (64-bit)
 ```
 
 > Catatan: Field lain dapat dikosongkan atau mengikuti pilihan default.
 
+<img src="https://github.com/user-attachments/assets/22fc6a3d-04bd-425a-94b0-c26bcb0ae88f" alt="ISO" width="600" height="200"/>
+
 ### 2. Compute offering
-Bagian ini menentukan alokasi CPU dan memori untuk VM yang akn dibuat.
+Bagian ini menentukan alokasi CPU dan memori untuk VM yang akan dibuat.
 
 **Akses menu:**
 `Service Offerings` -> `Compute Offerings` -> `Add Compute Offering`
 
 **Field yang wajib diisi:**
-* Name: Nama untuk offering. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
-* Compute Offering Type:  Yaitu jenis penawaran sumber daya, ada 3 opsi yang dapat dipilih:  
-  - `Fixed Offering` –> berupa nilai tetap  
-  - `Custom Constrained` –> dapat diatur oleh user tapi pengaturannya dibatasi  
-  - `Custom Unconstrained` –> dapat diatur bebas oleh user 
-* CPU Cores: Jumlah core CPU yang akan dialokasikan
-* CPU (in MHz): Kecepatan tiap core CPU.
-* Memory (in MB): Jumlah memori RAM dalam MB.
+* `Name`: Nama untuk offering. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
+* `Compute Offering Type`:  Yaitu jenis penawaran sumber daya, ada 3 opsi yang dapat dipilih:  
+  - Fixed Offering –> berupa nilai tetap  
+  - Custom Constrained –> dapat diatur oleh user tapi pengaturannya dibatasi  
+  - Custom Unconstrained –> dapat diatur bebas oleh user 
+* `CPU Cores`: Jumlah core CPU yang akan dialokasikan
+* `CPU (in MHz)`: Kecepatan tiap core CPU.
+* `Memory (in MB)`: Jumlah memori RAM dalam MB.
 
 ```
-Name:
+Name: Big Instance
 Compute Offering Type: Fixed offering
 CPU Cores: 2
-CPU (in MHz): 1600
-Memory (in MB): 8192
+CPU (in MHz): 1500
+Memory (in MB): 4096
 ```
 
 > Catatan: Field lain dapat dikosongkan atau mengikuti pilihan default.
 
+<img src="https://github.com/user-attachments/assets/32b08348-c6ba-48a8-80ce-9978f0250012" alt="Offering" width="600" height="200"/>
+
 ### 3. Instance
 Langkah terakhir adalah membuat dan menjalankan VM menggunakan ISO dan compute offering yang telah didaftarkan.
+
 **Akses menu:**
-`Compute` → `Instances` → `Create Instace`
+`Compute` → `Instances` → `Add Instace`
 
 **Field yang wajib diisi:**
-* Template/ISO: Gunakan ISO yang telah didaftarkan sebelumnya.
-* Compute Offering: Gunakan offering yang telah dibuat.
-* Disk Size: Memilih ukuran hard disk untuk VM.
+* `Template/ISO`: Gunakan ISO yang telah didaftarkan sebelumnya.
+* `Compute Offering`: Gunakan offering yang telah dibuat.
+* `Disk Size`: Memilih ukuran hard disk untuk VM.
 
 ```
-Template/ISO:
-Compute Offering: 
+Template/ISO: Debian
+Compute Offering: Big Instance
 Disk Size: Medium
 ```
 
 **Tahapan akhir:**
 * Klik `Launch Instance`
 * VM akan berada di status `Starting`, dan saat status berubah menjadi `Running`, klik tombol `View Console` untuk melihat tampilan layar VM.
+
+<img src="https://github.com/user-attachments/assets/d7f29153-4477-47df-b701-542583da9950" alt="VM" width="600" height="200"/>
+
