@@ -11,8 +11,8 @@ password: password
 ```
 > Catatan: Field `Domain` dapat dikosongkan
 
-Berikut adalah tampilan awal dari web CloudStack:
-<img src="https://github.com/user-attachments/assets/37893420-a7cb-459b-a97d-b5b5a3be72d7" alt="dashboard" width="500" height="300"/>
+Berikut adalah tampilan awal dari web CloudStack:  
+<img src="https://github.com/user-attachments/assets/37893420-a7cb-459b-a97d-b5b5a3be72d7" alt="dashboard" width="600" height="400"/>
 
 > Catatan: Setelah login, password dapat langsung diubah
 
@@ -26,16 +26,16 @@ Terdapat dua jenis zone yang menentukan arsitektur jaringan dan cara distribusi 
 * Core Zone: Digunakan di data center pusat. Lebih fleksibel dan redundan.
 * Edge Zone: Digunakan di remote/branch site. Lebih ringan dan minim konfigurasi.
 
-Pilih Core Zone karena sedang membangun infrastruktur utama.
-<img src="https://github.com/user-attachments/assets/a0850f4d-561f-4e0d-a99e-871123f1e20b" alt="core_zone" width="500" height="300"/>
+Pilih Core Zone karena sedang membangun infrastruktur utama.  
+<img src="https://github.com/user-attachments/assets/a0850f4d-561f-4e0d-a99e-871123f1e20b" alt="core_zone" width="600" height="400"/>
 
 ### 2. Core zone type
 Terdapat dua jenis core zone yang dapat dipilih, yaitu:
 * Advanced: VM dapat berada di jaringan virtual terpisah dan menyediakan layanan jaringan yang canggih. Digunakan saat ingin deploy banyak user atau menjalankan skenario enterprise.
 * Basic: VM berada dalam satu jaringan. Digunakan saat ingin setup yang sederhana dan cepat, serta sesuai untuk topologi kecil.
 
-Pilih Basic karena tidak membutuhkan layanan jaringan yang canggih dan ingin deploy VM yang cepat untuk testing.
-<img src="https://github.com/user-attachments/assets/a7fa98e9-eee8-4b25-9393-b39e340403a2" alt="basic_core_zone" width="500" height="300"/>
+Pilih Basic karena tidak membutuhkan layanan jaringan yang canggih dan ingin deploy VM yang cepat untuk testing.  
+<img src="https://github.com/user-attachments/assets/a7fa98e9-eee8-4b25-9393-b39e340403a2" alt="basic_core_zone" width="600" height="400"/>
 
 ### 3. Zone details
 Isi field yang wajib dengan ketentuan sebagai berikut:
@@ -60,7 +60,7 @@ Pada jenis Basic Zone, hanya terdapat satu physical network yang digunakan dan s
 * Guest Traffic
 * Storage Traffic
 
-<img src="https://github.com/user-attachments/assets/d6e2d382-4c3d-482c-80c1-056d779eac60" alt="basic_core_zone" width="500" height="300"/>
+<img src="https://github.com/user-attachments/assets/d6e2d382-4c3d-482c-80c1-056d779eac60" alt="physical_network" width="600" height="400"/>
 
 > Catatan: Pada proses setup Basic Zone, tidak ada konfigurasi khusus yang perlu diubah di bagian ini. Cukup klik **Next** untuk melanjutkan ke konfigurasi Pod.
 
@@ -148,4 +148,7 @@ Path: /export/secondary
 ```
 
 ### 6. Launch Zone
-Pada tahap akhir ini, semua komponen yang telah dikonfigurasi akan dikonfirmasi dan diaktifkan agar zone dapat digunakan untuk menjalankan VM. Jika semua konfigurasi valid, maka zone sudah dapat aktif dan digunakan.
+Pada tahap akhir ini, semua komponen yang telah dikonfigurasi akan dikonfirmasi dan diaktifkan agar zone dapat digunakan untuk menjalankan VM. Jika semua konfigurasi valid, maka zone sudah dapat aktif dan digunakan.  
+Tampilan jika konfigurasi berhasil:  
+<img src="https://github.com/user-attachments/assets/a1d081a6-f8be-483f-b973-f9b7ed9ad0a7" alt="dashboard" width="600" height="200"/>
+
