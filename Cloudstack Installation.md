@@ -13,9 +13,9 @@ Sistem Operasi : Ubuntu Server 24.04
 ## Alamat Jaringan
 
 ```
-Alamat jaringan : 192.168.X.X/24
-Alamat IP Host : 192.168.X.X/24
-Gateway : 192.168.X.X
+Alamat jaringan : 192.168.1.0/24
+Alamat IP Host : 192.168.1.X/24
+Gateway : 192.168.1.1
 IP public : 139.194.X.X
 ```
 
@@ -45,10 +45,10 @@ network:
       optional: true
   bridges:
     cloudbr0:
-      addresses: [192.168.X.X/24]  # Alamat IP host
+      addresses: [192.168.1.X/24]  # Alamat IP host
       routes:
         - to: default
-          via: 192.168.X.X  # Gateway
+          via: 192.168.1.1  # Gateway
       nameservers:
         addresses: [1.1.1.1,8.8.8.8]
       interfaces: [enp1s0]
@@ -261,7 +261,7 @@ systemctl restart libvirtd
 ### Konfigurasi Firewall (iptables)
 
 ```
-NETWORK=192.168.X.X/24
+NETWORK=192.168.1.0/24
 iptables -A INPUT -s $NETWORK -m state --state NEW -p udp --dport 111 -j ACCEPT     # Portmap service (needed for NFS)
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 111 -j ACCEPT     # Portmap service (needed for NFS)
 iptables -A INPUT -s $NETWORK -m state --state NEW -p tcp --dport 2049 -j ACCEPT    # NFS server port
