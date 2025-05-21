@@ -147,8 +147,76 @@ Server: 192.168.1.X
 Path: /export/secondary
 ```
 
-### 6. Launch Zone
+### 6. Launch zone
 Pada tahap akhir ini, semua komponen yang telah dikonfigurasi akan dikonfirmasi dan diaktifkan agar zone dapat digunakan untuk menjalankan VM. Jika semua konfigurasi valid, maka zone sudah dapat aktif dan digunakan.  
 Tampilan jika konfigurasi berhasil:  
 <img src="https://github.com/user-attachments/assets/a1d081a6-f8be-483f-b973-f9b7ed9ad0a7" alt="dashboard" width="600" height="200"/>
 
+
+## Pembuatan Instance (VM)
+### 1. Register ISO
+Pada bagian ini akan dilakukan pendaftaran file ISO yang digunakan sebagai sistem operasi VM.
+
+**Akses menu:**
+`Images` -> `ISO` -> `Register ISO`
+
+**Field yang wajib diisi:**
+* URL: Berisi link ke file .iso yang akan digunakan.
+* Name: Nama untuk ISO. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
+* Zone: Zone tempat ISO ini tersedia.
+* OS Type: Sistem operasi yang sesuai dengan ISO yang digunakan.
+
+```
+URL:
+Name:
+Zone: All zones
+OS Type:
+```
+
+> Catatan: Field lain dapat dikosongkan atau mengikuti pilihan default.
+
+### 2. Compute offering
+Bagian ini menentukan alokasi CPU dan memori untuk VM yang akn dibuat.
+
+**Akses menu:**
+`Service Offerings` -> `Compute Offerings` -> `Add Compute Offering`
+
+**Field yang wajib diisi:**
+* Name: Nama untuk offering. Bebas, namun sebaiknya bersifat deskriptif agar mudah dikenali.
+* Compute Offering Type:  Yaitu jenis penawaran sumber daya, ada 3 opsi yang dapat dipilih:  
+  - `Fixed Offering` –> berupa nilai tetap  
+  - `Custom Constrained` –> dapat diatur oleh user tapi pengaturannya dibatasi  
+  - `Custom Unconstrained` –> dapat diatur bebas oleh user 
+* CPU Cores: Jumlah core CPU yang akan dialokasikan
+* CPU (in MHz): Kecepatan tiap core CPU.
+* Memory (in MB): Jumlah memori RAM dalam MB.
+
+```
+Name:
+Compute Offering Type: Fixed offering
+CPU Cores: 2
+CPU (in MHz): 1600
+Memory (in MB): 8192
+```
+
+> Catatan: Field lain dapat dikosongkan atau mengikuti pilihan default.
+
+### 3. Instance
+Langkah terakhir adalah membuat dan menjalankan VM menggunakan ISO dan compute offering yang telah didaftarkan.
+**Akses menu:**
+`Compute` → `Instances` → `Create Instace`
+
+**Field yang wajib diisi:**
+* Template/ISO: Gunakan ISO yang telah didaftarkan sebelumnya.
+* Compute Offering: Gunakan offering yang telah dibuat.
+* Disk Size: Memilih ukuran hard disk untuk VM.
+
+```
+Template/ISO:
+Compute Offering: 
+Disk Size: Medium
+```
+
+**Tahapan akhir:**
+* Klik `Launch Instance`
+* VM akan berada di status `Starting`, dan saat status berubah menjadi `Running`, klik tombol `View Console` untuk melihat tampilan layar VM.
