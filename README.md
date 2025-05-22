@@ -17,6 +17,12 @@
 ## Definisi
 Apache CloudStack merupakan sebuah platform *open-source* yang digunakan untuk membangun layanan IaaS (*Infrastructure as a Service*). Apache CloudStack memungkinkan pembuatan dan pengelolaan lingkungan komputasi awan, seperti layanan *public cloud* dan *private cloud* untuk perusahaan.
 
+## Tahapan Pengerjaan
+1. Instalasi CloudStack pada server mencakup konfigurasi jaringan, instalasi CloudStack Management Server dan KVM Hypervisor dalam satu host. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Installation.md)
+2. Setup Basic Zone, pengaturan jaringan dan resource (cluster, host, storage), lalu dilanjutkan dengan registrasi ISO, pembuatan compute offering, dan peluncuran VM (instance) pada UI Cloudstack. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Configuration.md)
+3. Membuat ddns pada server sehingga server bisa diakses menggunakan domain name. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20DNS.md)
+4. Setelah domain DuckDNS siap, lakukan port forwarding di router agar permintaan ke port 80 diteruskan ke server lokal (Apache port 8080). (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20HTTP.md)
+
 ## Fitur dan Kemampuan Utama
 #### 1. Penyediaan mandiri
 Pengguna dapat membuat, mengelola, dan menghentikan VM (*Virtual Machine*) sendiri melalui antarmuka web.
