@@ -1,3 +1,5 @@
+[![Logo](https://github.com/user-attachments/assets/30735ef8-5268-4c95-b172-f1b826ecc745)](https://ee.ui.ac.id/)
+
 # Kelompok 4:
 * Adam Bintang Arafah Poernomo (2206029273)
 * Aliyah Rizky Al-Afifah Polanda (2206024682)
@@ -17,11 +19,11 @@
 ## Definisi
 Apache CloudStack merupakan sebuah platform *open-source* yang digunakan untuk membangun layanan IaaS (*Infrastructure as a Service*). Apache CloudStack memungkinkan pembuatan dan pengelolaan lingkungan komputasi awan, seperti layanan *public cloud* dan *private cloud* untuk perusahaan.
 
-## Tahapan Pengerjaan
-1. Instalasi CloudStack pada server mencakup konfigurasi jaringan, instalasi CloudStack Management Server dan KVM Hypervisor dalam satu host. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Installation.md)
-2. Setup Basic Zone, pengaturan jaringan dan resource (cluster, host, storage), lalu dilanjutkan dengan registrasi ISO, pembuatan compute offering, dan peluncuran VM (instance) pada UI Cloudstack. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Configuration.md)
-3. Membuat ddns pada server sehingga server bisa diakses menggunakan domain name pada browser. (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20DNS.md)
-4. Setelah domain DuckDNS siap, lakukan port forwarding di router agar permintaan ke port 80 diteruskan ke server lokal (Apache port 8080). (link : https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20HTTP.md)
+## Tahapan Instalasi dan Konfigurasi
+1. Instalasi CloudStack pada server mencakup konfigurasi jaringan, instalasi CloudStack Management Server dan KVM Hypervisor dalam satu host. [Klik di sini untuk tutorial instalasi](https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Installation.md)
+2. Setup Basic Zone, pengaturan jaringan dan resource (cluster, host, storage), lalu dilanjutkan dengan registrasi ISO, pembuatan compute offering, dan peluncuran VM (instance) pada UI Cloudstack. [Klik di sini untuk tutorial konfigurasi](https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20Configuration.md)
+3. Membuat ddns pada server sehingga server bisa diakses menggunakan domain name pada browser. [Klik di sini untuk tutorial pembuatan DDNS](https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20DNS.md)
+4. Setelah domain DuckDNS siap, lakukan port forwarding di router agar permintaan ke port 80 diteruskan ke server lokal (Apache port 8080). [Klik di sini untuk tutorial port forwarding](https://github.com/rizkyAlya/Apache-CloudStack_Group4/blob/main/Cloudstack%20HTTP.md)
 
 ## Fitur dan Kemampuan Utama
 #### 1. Penyediaan mandiri
@@ -63,3 +65,5 @@ Terpisah dari struktur Pod-Cluster, terdapat `Secondary Storage`, yang digunakan
 * "Apa Itu KVM (Mesin Virtual Berbasis Kernel)?" AWS. [Online]. Available: https://aws.amazon.com/id/what-is/kvm/. [Accessed: May 17, 2025].
 * P. Loshin, "Network File System (NFS)" TechTarget. [Online]. Available: https://www.techtarget.com/searchenterprisedesktop/definition/Network-File-System. [Accessed: May 17, 2025].
 * J. Ellingwood, "How the Iptables Firewall Works," Dec. 2022. [Online]. Available: https://www.digitalocean.com/community/tutorials/how-the-iptables-firewall-works. [Accessed: May 19, 2025].
+* AhmadRifqi86, "cloudstack-install-and-configure," GitHub. [Online]. Available: https://github.com/AhmadRifqi86/cloudstack-install-and-configure/tree/main/cloudstack-install. [Accessed: May 7, 2025].
+
